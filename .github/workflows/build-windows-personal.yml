@@ -3,10 +3,10 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - master
+      - master_personal
     paths:
       - version.py
-      - .github/workflows/build-windows.yml
+      - .github/workflows/build-windows-personal.yml
 
 jobs:
   Windows-build:
