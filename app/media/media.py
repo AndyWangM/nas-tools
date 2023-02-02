@@ -206,9 +206,9 @@ class Media:
         """
         try:
             if first_media_year:
-                movies = self.search.movies({"query": file_media_name, "year": first_media_year})
+                movies = self.search.movies({"query": file_media_name, "include_adult": "true", "year": first_media_year})
             else:
-                movies = self.search.movies({"query": file_media_name})
+                movies = self.search.movies({"query": file_media_name, "include_adult": "true"})
         except TMDbException as err:
             log.error(f"【Meta】连接TMDB出错：{str(err)}")
             return None
@@ -265,9 +265,9 @@ class Media:
         """
         try:
             if first_media_year:
-                tvs = self.search.tv_shows({"query": file_media_name, "first_air_date_year": first_media_year})
+                tvs = self.search.tv_shows({"query": file_media_name, "include_adult": "true", "first_air_date_year": first_media_year})
             else:
-                tvs = self.search.tv_shows({"query": file_media_name})
+                tvs = self.search.tv_shows({"query": file_media_name, "include_adult": "true"})
         except TMDbException as err:
             log.error(f"【Meta】连接TMDB出错：{str(err)}")
             return None
@@ -340,7 +340,7 @@ class Media:
             return False
 
         try:
-            tvs = self.search.tv_shows({"query": file_media_name})
+            tvs = self.search.tv_shows({"query": file_media_name, "include_adult": "true"})
         except TMDbException as err:
             log.error(f"【Meta】连接TMDB出错：{str(err)}")
             return None
@@ -373,7 +373,7 @@ class Media:
         :return: 匹配的媒体信息
         """
         try:
-            multis = self.search.multi({"query": file_media_name}) or []
+            multis = self.search.multi({"query": file_media_name, "include_adult": "true"}) or []
         except TMDbException as err:
             log.error(f"【Meta】连接TMDB出错：{str(err)}")
             return None
