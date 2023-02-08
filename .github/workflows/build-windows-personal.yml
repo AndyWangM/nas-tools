@@ -1,4 +1,4 @@
-name: Build NAStool Windows
+name: Build NAStool Windows Personal
 on:
   workflow_dispatch:
   push:
