@@ -192,10 +192,14 @@ class BrushTask(object):
         else:
             log.info("【Brush】%s RSS获取数据：%s" % (site_name, len(rss_result)))
 
+        # 同时下载数
         max_dlcount = rss_rule.get("dlcount")
-        downloading_count = self.__get_downloading_count(downloader_cfg)
-        new_toreent_count = int(max_dlcount) - int(downloading_count)
         success_count = 0
+        new_torrent_count = 0
+        if max_dlcount:
+            downloading_count = self.__get_downloading_count(downloader_cfg) or 0
+            new_torrent_count = int(max_dlcount) - int(downloading_count)
+
         for res in rss_result:
             try:
                 # 种子名
@@ -242,7 +246,7 @@ class BrushTask(object):
                     # 计数
                     success_count += 1
                     # 添加种子后不能超过最大下载数量
-                    if success_count >= new_toreent_count:
+                    if max_dlcount and success_count >= new_torrent_count:
                         break
 
                     # 再判断一次

@@ -45,7 +45,7 @@ class Downloader:
             'app.downloader.client',
             filter_func=lambda _, obj: hasattr(obj, 'schema')
         )
-        log.debug(f"【Downloader】: 已经加载的下载器：{self._downloader_schema}")
+        log.debug(f"【Downloader】加载下载器：{self._downloader_schema}")
         self.init_config()
 
     def init_config(self):
@@ -639,7 +639,7 @@ class Downloader:
                         # 选中一个单季整季的或单季包括需要的所有集的
                         if item.tmdb_id == need_tmdbid \
                                 and (not item.get_episode_list()
-                                     or set(item.get_episode_list()).issuperset(set(need_episodes))) \
+                                     or set(item.get_episode_list()).intersection(set(need_episodes))) \
                                 and len(item.get_season_list()) == 1 \
                                 and item.get_season_list()[0] == need_season:
                             # 检查种子看是否有需要的集
@@ -1020,8 +1020,6 @@ class Downloader:
         :return: 集数列表、种子路径
         """
         site_info = self.sites.get_site_attr(url)
-        if not site_info.get("cookie"):
-            return [], None
         # 保存种子文件
         file_path, _, _, files, retmsg = Torrent().get_torrent_info(
             url=url,
@@ -1062,3 +1060,22 @@ class Downloader:
         if not self._download_setting.get(default_download_setting):
             default_download_setting = "-1"
         return default_download_setting
+
+    def set_speed_limit(self, downloader, download_limit=None, upload_limit=None):
+        """
+        设置速度限制
+        """
+        if not downloader:
+            return []
+        _client = self.__get_client(downloader)
+        try:
+            download_limit = int(download_limit) if download_limit else 0
+        except Exception as err:
+            ExceptionUtils.exception_traceback(err)
+            download_limit = 0
+        try:
+            upload_limit = int(upload_limit) if upload_limit else 0
+        except Exception as err:
+            ExceptionUtils.exception_traceback(err)
+            upload_limit = 0
+        _client.set_speed_limit(download_limit=download_limit, upload_limit=upload_limit)

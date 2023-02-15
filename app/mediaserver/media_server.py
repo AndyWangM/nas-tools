@@ -26,7 +26,7 @@ class MediaServer:
             'app.mediaserver.client',
             filter_func=lambda _, obj: hasattr(obj, 'schema')
         )
-        log.debug(f"【MediaServer】: 已经加载的媒体服务器：{self._mediaserver_schemas}")
+        log.debug(f"【MediaServer】加载媒体服务器：{self._mediaserver_schemas}")
         self.init_config()
 
     def init_config(self):
@@ -229,10 +229,18 @@ class MediaServer:
 
     def get_iteminfo(self, itemid):
         """
-          根据ItemId从媒体服务器查询项目详情
-          :param itemid: 在Emby中的ID
-          :return: 图片对应在TMDB中的URL
-          """
+        根据ItemId从媒体服务器查询项目详情
+        :param itemid: 在Emby中的ID
+        :return: 图片对应在TMDB中的URL
+        """
         if not self.server:
             return None
         return self.server.get_iteminfo(itemid)
+
+    def get_playing_sessions(self):
+        """
+        获取正在播放的会话
+        """
+        if not self.server:
+            return None
+        return self.server.get_playing_sessions()

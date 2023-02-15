@@ -43,6 +43,7 @@ from app.rsschecker import RssChecker
 from app.scheduler import run_scheduler, restart_scheduler
 from app.sync import run_monitor, restart_monitor
 from app.torrentremover import TorrentRemover
+from app.speedlimiter import SpeedLimiter
 from check_config import update_config, check_config
 from version import APP_VERSION
 
@@ -107,6 +108,8 @@ def init_system():
 
 def start_service():
     log.console("开始启动服务...")
+    # 加载索引器配置
+    IndexerHelper()
     # 启动虚拟显示
     DisplayHelper()
     # 启动定时服务
@@ -119,9 +122,9 @@ def start_service():
     RssChecker()
     # 启动自动删种服务
     TorrentRemover()
-    # 加载索引器配置
-    IndexerHelper()
-    # 初始化浏览器
+    # 启动播放限速服务
+    SpeedLimiter()
+    # 初始化浏览器驱动
     if not is_windows_exe:
         ChromeHelper().init_driver()
 
